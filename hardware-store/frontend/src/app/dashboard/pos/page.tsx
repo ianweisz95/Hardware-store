@@ -11,7 +11,6 @@ import {
   Package,
 } from "lucide-react";
 import clsx from "clsx";
-import { useReactToPrint } from "react-to-print";
 
 // ─── Receipt Component ────────────────────────────────────────────────────────
 function Receipt({ order }: { order: any }) {
@@ -255,10 +254,69 @@ export default function POSPage() {
     });
   };
 
-  const printReceipt = useReactToPrint({
-    content: () => receiptRef.current,
-    onAfterPrint: () => setCompletedOrder(null),
-  });
+  const printReceipt = () => {
+    if (!receiptRef.current) return;
+    const receiptContent = receiptRef.current.innerHTML;
+    const win = window.open("", "_blank", "width=420,height=650");
+    if (!win) { toast.error("Please allow popups to print receipts"); return; }
+    win.document.write(`<!DOCTYPE html><html><head><title>Receipt - ${completedOrder?.orderNumber || ''}</title>
+      <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Courier New', monospace; font-size: 12px; margin: 0; padding: 16px; color: #000; background: #fff; }
+        .receipt { width: 100%; }
+        .flex { display: flex; }
+        .justify-between { justify-content: space-between; }
+        .text-center { text-align: center; }
+        .font-bold { font-weight: 700; }
+        .text-base { font-size: 14px; }
+        .text-sm { font-size: 11px; }
+        .border-t { border-top: 1px dashed #000; }
+        .border-dashed { border-style: dashed; }
+        .my-2 { margin: 6px 0; }
+        .mb-1 { margin-bottom: 4px; }
+        .mb-2 { margin-bottom: 8px; }
+        .mt-1 { margin-top: 4px; }
+        .mt-2 { margin-top: 8px; }
+        .mt-3 { margin-top: 12px; }
+        .pt-2 { padding-top: 8px; }
+        .p-4 { padding: 16px; }
+        .gap-2 { gap: 8px; }
+        .flex-1 { flex: 1; }
+        p { margin: 2px 0; }
+        @media print {
+          body { padding: 0; }
+          @page { margin: 8mm; size: 80mm auto; }
+        }
+      </style></head>
+      <body>${receiptContent}</body></html>`);
+    win.document.close();
+    win.focus();
+    setTimeout(() => {
+      win.print();
+      win.addEventListener('afterprint', () => { win.close(); setCompletedOrder(null); });
+    }, 600);
+  };
+
+  const downloadReceipt = () => {
+    if (!receiptRef.current || !completedOrder) return;
+    const receiptContent = receiptRef.current.innerHTML;
+    const html = `<!DOCTYPE html><html><head><title>Receipt-${completedOrder.orderNumber}</title>
+      <style>
+        body { font-family: 'Courier New', monospace; font-size: 12px; padding: 16px; color: #000; }
+        .flex { display: flex; } .justify-between { justify-content: space-between; }
+        .text-center { text-align: center; } .font-bold { font-weight: 700; }
+        .text-base { font-size: 14px; } .border-t { border-top: 1px dashed #000; }
+        .my-2 { margin: 6px 0; } .mb-1 { margin-bottom: 4px; } .mt-3 { margin-top: 12px; }
+        .pt-2 { padding-top: 8px; } .gap-2 { gap: 8px; } .flex-1 { flex: 1; } p { margin: 2px 0; }
+      </style></head><body>${receiptContent}</body></html>`;
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `receipt-${completedOrder.orderNumber}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   const subtotal = cart.subtotal();
   const total = subtotal - discount;
@@ -493,7 +551,7 @@ export default function POSPage() {
               <h3 className="font-bold text-gray-900">Sale Complete!</h3>
               <p className="text-sm text-gray-500">{completedOrder.orderNumber}</p>
             </div>
-            <div className="hidden" ref={receiptRef}>
+            <div style={{position:"absolute",left:"-9999px",top:0}} ref={receiptRef}>
               <Receipt order={completedOrder} />
             </div>
             <div className="flex gap-3">
@@ -504,6 +562,9 @@ export default function POSPage() {
                 <ReceiptText className="w-4 h-4" /> Print Receipt
               </button>
             </div>
+            <button onClick={downloadReceipt} className="btn-secondary w-full mt-2 text-xs">
+              Download Receipt (HTML)
+            </button>
           </div>
         </div>
       )}

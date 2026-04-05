@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const variantSchema = new mongoose.Schema({
   name: { type: String, required: true }, // e.g., "50kg bag", "2m length"
-  sku: { type: String, required: true, unique: true },
+  sku: { type: String, required: true, unique: true, sparse: true },
   price: { type: Number, required: true, min: 0 },
   costPrice: { type: Number, default: 0 },
   barcode: String,

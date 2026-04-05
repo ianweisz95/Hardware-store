@@ -119,10 +119,11 @@ const seed = async () => {
     isActive: true,
   });
 
-  // Create products
+  // Create products — slugs explicitly set so insertMany works (bypasses pre-save hook)
   const products = [
     {
       name: "Bamburi Cement 50kg",
+      slug: "bamburi-cement-50kg",
       description: "High-quality Portland cement for construction",
       category: cementCat._id,
       brand: "Bamburi",
@@ -138,6 +139,7 @@ const seed = async () => {
     },
     {
       name: "Simba Cement 50kg",
+      slug: "simba-cement-50kg",
       description: "Premium quality cement",
       category: cementCat._id,
       brand: "Simba",
@@ -151,6 +153,7 @@ const seed = async () => {
     },
     {
       name: "Hacksaw Frame with Blade",
+      slug: "hacksaw-frame-with-blade",
       description: "Heavy-duty adjustable hacksaw frame",
       category: toolsCat._id,
       brand: "Stanley",
@@ -164,6 +167,7 @@ const seed = async () => {
     },
     {
       name: "Claw Hammer 500g",
+      slug: "claw-hammer-500g",
       description: "Professional claw hammer",
       category: toolsCat._id,
       brand: "Stanley",
@@ -175,7 +179,8 @@ const seed = async () => {
       lowStockThreshold: 10,
     },
     {
-      name: "2.5mm² Electrical Cable (per meter)",
+      name: "2.5mm2 Electrical Cable (per meter)",
+      slug: "25mm2-electrical-cable-per-meter",
       description: "Single core PVC insulated cable",
       category: electricalCat._id,
       brand: "Kenwest",
@@ -188,6 +193,7 @@ const seed = async () => {
     },
     {
       name: "MCB 20A Single Pole",
+      slug: "mcb-20a-single-pole",
       description: "Miniature circuit breaker",
       category: electricalCat._id,
       brand: "Clipsal",
@@ -200,6 +206,7 @@ const seed = async () => {
     },
     {
       name: "PPR Pipe 20mm (per meter)",
+      slug: "ppr-pipe-20mm-per-meter",
       description: "Polypropylene random copolymer pipe",
       category: plumbingCat._id,
       brand: "Aquatech",
@@ -212,6 +219,7 @@ const seed = async () => {
     },
     {
       name: "Crown Paint Interior Matt 4L",
+      slug: "crown-paint-interior-matt-4l",
       description: "Premium interior emulsion paint",
       category: paintCat._id,
       brand: "Crown Paints",
@@ -224,6 +232,7 @@ const seed = async () => {
     },
     {
       name: "Mabati Iron Sheet 3m (32 gauge)",
+      slug: "mabati-iron-sheet-3m-32-gauge",
       description: "Corrugated iron roofing sheet",
       category: roofingCat._id,
       brand: "Mabati Rolling Mills",
@@ -236,6 +245,7 @@ const seed = async () => {
     },
     {
       name: "Power Drill 750W",
+      slug: "power-drill-750w",
       description: "Variable speed electric drill with hammer function",
       category: toolsCat._id,
       brand: "Bosch",
