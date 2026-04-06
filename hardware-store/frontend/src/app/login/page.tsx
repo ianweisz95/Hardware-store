@@ -23,16 +23,6 @@ export default function LoginPage() {
     }
   };
 
-  const quickLogin = (role: string) => {
-    const creds: Record<string, { email: string; password: string }> = {
-      admin: { email: "admin@hardwarestore.co.ke", password: "Admin@1234" },
-      manager: { email: "manager@hardwarestore.co.ke", password: "Manager@1234" },
-      cashier: { email: "cashier@hardwarestore.co.ke", password: "Cashier@1234" },
-    };
-    setEmail(creds[role].email);
-    setPassword(creds[role].password);
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -90,21 +80,6 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Quick login for demo */}
-          <div className="mt-6 pt-6 border-t border-gray-100">
-            <p className="text-xs text-gray-500 text-center mb-3">Demo accounts</p>
-            <div className="grid grid-cols-3 gap-2">
-              {["admin", "manager", "cashier"].map((role) => (
-                <button
-                  key={role}
-                  onClick={() => quickLogin(role)}
-                  className="text-xs py-1.5 px-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 capitalize transition-colors"
-                >
-                  {role}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </div>
